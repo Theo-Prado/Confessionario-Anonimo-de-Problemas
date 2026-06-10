@@ -13,14 +13,14 @@
         }
 
         body {
-            background: #0a0e27;
+            background: #000000;
             color: #00ff88;
             font-family: 'Courier New', monospace;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Grid background effect */
+        /* Animated Matrix Rain Background */
         body::before {
             content: '';
             position: fixed;
@@ -29,11 +29,47 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(0deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+                linear-gradient(0deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
             pointer-events: none;
             z-index: -1;
+            animation: gridShift 20s linear infinite;
+        }
+
+        @keyframes gridShift {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 40px 40px;
+            }
+        }
+
+        /* Matrix Rain Effect */
+        body::after {
+            content: '卍 ∞ ◈ ▲ ◆ ∑ ◉ ▼ ◆ ◉ ∑ ▲ ◈ ∞ 卍 ◈ ▲ ◆ ∑ ◉ ▼ ◆ ◉ ∑ ▲ ◈ ∞ 卍 ∑ ◉ ▼ ◆ ◉ ∑ ▲ ◈ ∞ 卍 ◈ ▲ ◆ ∑ ◉ ▼ ◆ ◉ ∑ ▲ ◈ ∞ 卍';
+            position: fixed;
+            top: -100px;
+            left: 0;
+            right: 0;
+            font-size: 20px;
+            color: rgba(0, 255, 136, 0.02);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            animation: matrixRain 15s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+            line-height: 1.8;
+        }
+
+        @keyframes matrixRain {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100vh);
+            }
         }
 
         .container {
@@ -49,37 +85,75 @@
             text-align: center;
             margin-bottom: 40px;
             position: relative;
-            padding: 40px 0;
-            border-bottom: 2px solid #00ff88;
-            border-top: 2px solid #ff00ff;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), 0 0 40px rgba(255, 0, 255, 0.2);
+            padding: 50px 0;
+            border-bottom: 3px solid #00ff88;
+            border-top: 3px solid #ff00ff;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.6),
+                0 0 60px rgba(255, 0, 255, 0.4),
+                inset 0 0 30px rgba(0, 255, 136, 0.1);
+            background: linear-gradient(180deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
         }
 
         h1 {
-            font-size: 3.5em;
-            letter-spacing: 3px;
+            font-size: 4em;
+            letter-spacing: 5px;
             text-transform: uppercase;
             color: #00ff88;
-            text-shadow: 0 0 10px #00ff88, 0 0 20px #ff00ff, 0 0 30px rgba(0, 255, 136, 0.5);
-            animation: glitch 2s infinite;
-            margin-bottom: 10px;
+            text-shadow: 
+                0 0 10px #00ff88,
+                0 0 20px #ff00ff,
+                0 0 30px rgba(0, 255, 136, 0.7),
+                0 0 40px #00ffff;
+            animation: glitch 3s infinite, pulse-glow 2s infinite;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .subtitle {
-            font-size: 0.9em;
+            font-size: 1em;
             color: #00ffff;
-            text-shadow: 0 0 10px #00ffff;
-            letter-spacing: 2px;
+            text-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px rgba(0, 255, 255, 0.5);
+            letter-spacing: 3px;
+            animation: blink 1.5s infinite;
         }
 
         @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 10px #00ff88, 0 0 20px #ff00ff; }
-            50% { text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff, 0 0 40px #00ff88; }
+            0%, 100% { 
+                text-shadow: 0 0 10px #00ff88, 0 0 20px #ff00ff;
+            }
+            25% {
+                text-shadow: 
+                    0 2px 0px #ff00ff,
+                    -2px -2px 0px #00ffff,
+                    2px 2px 0px #00ff88;
+            }
+            50% { 
+                text-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff, 0 0 40px #00ff88;
+            }
+            75% {
+                text-shadow: 
+                    -2px 2px 0px #ff00ff,
+                    2px -2px 0px #00ffff,
+                    0 0 10px #00ff88;
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; }
+            50%, 99% { opacity: 0.7; }
         }
 
         /* Cards */
         .card {
-            background: linear-gradient(135deg, rgba(10, 14, 39, 0.9) 0%, rgba(20, 24, 50, 0.9) 100%);
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(15, 30, 60, 0.95) 100%);
             border: 2px solid #00ff88;
             border-radius: 0;
             padding: 30px;
@@ -87,36 +161,69 @@
             position: relative;
             overflow: hidden;
             box-shadow: 
-                0 0 20px rgba(0, 255, 136, 0.4),
-                inset 0 0 20px rgba(0, 255, 136, 0.1),
-                0 0 40px rgba(255, 0, 255, 0.2);
+                0 0 20px rgba(0, 255, 136, 0.6),
+                inset 0 0 20px rgba(0, 255, 136, 0.15),
+                0 0 40px rgba(255, 0, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.8),
+                inset 0 0 30px rgba(0, 255, 136, 0.2),
+                0 0 60px rgba(255, 0, 255, 0.4);
+            border-color: #ff00ff;
         }
 
         .card::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
-            right: 0;
+            left: -100%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #00ff88, #ff00ff, #00ffff, transparent);
+            animation: scan 4s linear infinite;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: -100%;
+            width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, #00ff88, #ff00ff, #00ffff);
-            animation: scan 3s linear infinite;
+            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #00ff88, transparent);
+            animation: scanReverse 4s linear infinite;
         }
 
         @keyframes scan {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes scanReverse {
+            0% { right: 100%; }
+            100% { right: -100%; }
         }
 
         .card h2 {
             color: #ff00ff;
-            font-size: 1.8em;
+            font-size: 2em;
             margin-bottom: 20px;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #ff00ff;
-            border-bottom: 1px dashed #00ff88;
-            padding-bottom: 10px;
+            letter-spacing: 3px;
+            text-shadow: 
+                0 0 10px #ff00ff,
+                0 0 20px rgba(255, 0, 255, 0.5);
+            border-bottom: 2px dashed #00ff88;
+            padding-bottom: 15px;
+            animation: colorShift 3s infinite;
+        }
+
+        @keyframes colorShift {
+            0% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
+            50% { color: #00ffff; text-shadow: 0 0 10px #00ffff; }
+            100% { color: #ff00ff; text-shadow: 0 0 10px #ff00ff; }
         }
 
         /* Form Elements */
@@ -125,7 +232,7 @@
             padding: 15px;
             margin-top: 15px;
             margin-bottom: 15px;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(10, 20, 40, 0.9);
             border: 2px solid #00ff88;
             color: #00ff88;
             font-family: 'Courier New', monospace;
@@ -133,34 +240,50 @@
             border-radius: 0;
             resize: vertical;
             transition: all 0.3s ease;
-            box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.2);
+            box-shadow: 
+                inset 0 0 10px rgba(0, 255, 136, 0.2),
+                inset 0 0 20px rgba(0, 255, 136, 0.05);
         }
 
         select:focus, textarea:focus {
             outline: none;
             border-color: #ff00ff;
             box-shadow: 
-                inset 0 0 10px rgba(255, 0, 255, 0.3),
-                0 0 20px rgba(255, 0, 255, 0.4);
+                inset 0 0 15px rgba(255, 0, 255, 0.3),
+                0 0 20px rgba(255, 0, 255, 0.5),
+                inset 0 0 20px rgba(255, 0, 255, 0.1);
             color: #ff00ff;
             text-shadow: 0 0 10px #ff00ff;
+            transform: scale(1.01);
         }
 
         select option {
-            background: #0f172a;
+            background: #001a2e;
             color: #00ff88;
         }
 
         textarea::placeholder {
             color: #00ff88;
-            opacity: 0.5;
+            opacity: 0.6;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            animation: labelGlow 2s infinite;
+        }
+
+        @keyframes labelGlow {
+            0%, 100% { text-shadow: 0 0 5px #00ff88; }
+            50% { text-shadow: 0 0 15px #00ff88; }
         }
 
         /* Buttons */
         button {
             padding: 15px 40px;
-            background: linear-gradient(135deg, #00ff88 0%, #00ffff 100%);
-            color: #0a0e27;
+            background: linear-gradient(135deg, #00ff88 0%, #00ffff 50%, #ff00ff 100%);
+            color: #000000;
             border: 2px solid #00ff88;
             font-family: 'Courier New', monospace;
             font-size: 1em;
@@ -172,110 +295,221 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.7);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
 
         button:hover {
-            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 100%);
+            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 50%, #00ff88 100%);
             border-color: #ff00ff;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.5);
-            transform: translateY(-2px);
+            box-shadow: 
+                0 0 25px rgba(255, 0, 255, 1),
+                0 0 40px rgba(0, 255, 255, 0.7),
+                inset 0 0 20px rgba(0, 255, 136, 0.2);
+            transform: translateY(-3px);
+        }
+
+        button:hover::before {
+            left: 100%;
         }
 
         button:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         /* Relatos */
         .relato {
-            background: rgba(30, 41, 59, 0.6);
+            background: linear-gradient(135deg, rgba(20, 40, 80, 0.8) 0%, rgba(30, 50, 90, 0.8) 100%);
             border-left: 4px solid #00ff88;
-            padding: 20px;
+            border-right: 2px solid rgba(0, 255, 136, 0.3);
+            border-top: 1px solid rgba(0, 255, 136, 0.2);
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+            padding: 25px;
             margin: 20px 0;
             border-radius: 0;
             position: relative;
             transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            box-shadow: 
+                0 0 15px rgba(0, 255, 136, 0.3),
+                inset 0 0 10px rgba(0, 255, 136, 0.05);
+        }
+
+        .relato::before {
+            content: '> ';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #00ff88;
+            font-weight: bold;
+            opacity: 0.5;
         }
 
         .relato:hover {
             border-left-color: #ff00ff;
-            box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
-            transform: translateX(10px);
+            border-right-color: #00ffff;
+            box-shadow: 
+                0 0 25px rgba(255, 0, 255, 0.6),
+                inset 0 0 15px rgba(0, 255, 136, 0.1),
+                0 0 15px rgba(0, 255, 255, 0.3);
+            transform: translateX(8px);
         }
 
         .relato h3 {
             color: #00ffff;
-            font-size: 1.2em;
+            font-size: 1.3em;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px #00ffff;
+            text-shadow: 
+                0 0 10px #00ffff,
+                0 0 20px rgba(0, 255, 255, 0.3);
+            padding-left: 20px;
         }
 
         .relato p {
             color: #e0e7ff;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 10px;
+            padding-left: 20px;
         }
 
         .relato small {
-            color: #7c3aed;
+            color: #a855f7;
             font-size: 0.85em;
-            text-shadow: 0 0 5px #7c3aed;
+            text-shadow: 0 0 5px #a855f7;
         }
 
         /* Respostas */
         .resposta {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
             border-left: 3px solid #a855f7;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
             padding: 15px;
             margin-top: 15px;
             border-radius: 0;
             color: #d8b4fe;
             font-size: 0.95em;
-            box-shadow: inset 0 0 10px rgba(168, 85, 247, 0.2);
+            line-height: 1.6;
+            box-shadow: 
+                inset 0 0 10px rgba(168, 85, 247, 0.2),
+                0 0 10px rgba(168, 85, 247, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .resposta:hover {
+            box-shadow: 
+                inset 0 0 15px rgba(168, 85, 247, 0.3),
+                0 0 15px rgba(168, 85, 247, 0.25);
+            transform: translateX(5px);
         }
 
         .resposta::before {
             content: '» ';
             color: #a855f7;
             font-weight: bold;
+            text-shadow: 0 0 5px #a855f7;
         }
 
         /* Counter */
         .counter {
             text-align: right;
-            color: #7c3aed;
-            font-size: 0.8em;
+            color: #00ffff;
+            font-size: 0.85em;
             margin-top: 5px;
+            text-shadow: 0 0 5px #00ffff;
+            font-weight: bold;
         }
 
         /* Stats */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
+            animation: statsAppear 0.6s ease-out;
+        }
+
+        @keyframes statsAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .stat-box {
-            background: rgba(124, 58, 237, 0.1);
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(124, 58, 237, 0.15) 100%);
             border: 2px solid #7c3aed;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+            box-shadow: 
+                0 0 20px rgba(124, 58, 237, 0.4),
+                inset 0 0 15px rgba(124, 58, 237, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, transparent 100%);
+            opacity: 0;
+            animation: statPulse 2s infinite;
+        }
+
+        @keyframes statPulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .stat-box:hover {
+            border-color: #ff00ff;
+            box-shadow: 
+                0 0 30px rgba(168, 85, 247, 0.6),
+                inset 0 0 20px rgba(168, 85, 247, 0.2),
+                0 0 20px rgba(255, 0, 255, 0.3);
+            transform: scale(1.05);
         }
 
         .stat-number {
-            font-size: 2em;
+            font-size: 2.5em;
             color: #a855f7;
             font-weight: bold;
-            text-shadow: 0 0 10px #a855f7;
+            text-shadow: 
+                0 0 10px #a855f7,
+                0 0 20px rgba(168, 85, 247, 0.5);
+            position: relative;
+            z-index: 1;
         }
 
         .stat-label {
             color: #7c3aed;
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.95em;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Loading */
@@ -284,15 +518,41 @@
             50% { opacity: 0.5; }
         }
 
+        @keyframes loading {
+            0% { content: '▁'; }
+            10% { content: '▂'; }
+            20% { content: '▃'; }
+            30% { content: '▄'; }
+            40% { content: '▅'; }
+            50% { content: '▆'; }
+            60% { content: '▇'; }
+            70% { content: '█'; }
+            80% { content: '▇'; }
+            90% { content: '▆'; }
+        }
+
         .loading {
             display: inline-block;
             animation: pulse 1.5s infinite;
         }
 
+        /* Character count */
+        .char-counter {
+            color: #7c3aed;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px #7c3aed;
+            font-weight: bold;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2em;
+                font-size: 2.5em;
+                letter-spacing: 3px;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
             }
 
             .card {
@@ -301,25 +561,45 @@
 
             button {
                 width: 100%;
+                padding: 12px 30px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .relato {
+                padding-left: 30px;
             }
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
             background: rgba(0, 255, 136, 0.1);
+            border-left: 1px solid rgba(0, 255, 136, 0.2);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #00ff88;
-            border-radius: 5px;
+            background: linear-gradient(180deg, #00ff88, #00ffff);
+            border-radius: 0;
+            box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.3);
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #ff00ff;
+            background: linear-gradient(180deg, #ff00ff, #00ff88);
+            box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        /* Divider */
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, #ff00ff, #00ffff, transparent);
+            margin: 30px 0;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
         }
     </style>
 </head>
@@ -327,14 +607,14 @@
     <div class="container">
         <header>
             <h1>⚡ CONFESS0R ⚡</h1>
-            <div class="subtitle">> SISTEMA ANÔNIMO DE CONFISSÕES v1.0 <<</div>
+            <div class="subtitle">> SISTEMA ANÔNIMO DE CONFISSÕES v2.0 <<</div>
         </header>
 
         <!-- Form Card -->
         <div class="card">
             <h2>📤 NOVO RELATO</h2>
 
-            <label style="color: #00ff88; text-shadow: 0 0 10px #00ff88;">CATEGORIA:</label>
+            <label>CATEGORIA:</label>
             <select id="categoria">
                 <option>🏠 Família</option>
                 <option>💔 Relacionamentos</option>
@@ -345,7 +625,7 @@
                 <option>❓ Outros</option>
             </select>
 
-            <label style="color: #00ff88; text-shadow: 0 0 10px #00ff88; display: block; margin-top: 15px;">MENSAGEM:</label>
+            <label style="display: block; margin-top: 15px;">MENSAGEM:</label>
             <textarea
                 id="texto"
                 placeholder="Digite sua confissão anônima aqui... [MÁXIMO 500 CARACTERES]"
@@ -353,15 +633,17 @@
                 rows="5"
             ></textarea>
 
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                 <button onclick="publicarRelato()">
                     ✓ ENVIAR CONFISSÃO
                 </button>
-                <span style="color: #7c3aed; font-size: 0.9em;">
+                <span class="char-counter">
                     <span id="charCount">0</span>/500
                 </span>
             </div>
         </div>
+
+        <div class="divider"></div>
 
         <!-- Stats Card -->
         <div class="stats" id="statsContainer" style="display: none;">
@@ -375,11 +657,13 @@
             </div>
         </div>
 
+        <div class="divider"></div>
+
         <!-- Relatos Card -->
         <div class="card">
             <h2>📥 CONFISSÕES RECEBIDAS</h2>
             <div id="listaRelatos" style="min-height: 200px;">
-                <div style="color: #7c3aed; text-align: center; padding: 40px; font-size: 1.2em;">
+                <div style="color: #7c3aed; text-align: center; padding: 40px; font-size: 1.2em; text-shadow: 0 0 10px #7c3aed;">
                     ▀▄▀▄▀ CARREGANDO CONFISSÕES... ▀▄▀▄▀
                 </div>
             </div>
@@ -389,9 +673,20 @@
     <script>
         const API = "";
 
-        // Character counter
+        // Character counter with animation
         document.getElementById("texto").addEventListener("input", function() {
-            document.getElementById("charCount").textContent = this.value.length;
+            const count = this.value.length;
+            const countElement = document.getElementById("charCount");
+            countElement.textContent = count;
+            
+            // Change color based on usage
+            if (count > 400) {
+                countElement.parentElement.style.color = '#ff6b6b';
+            } else if (count > 300) {
+                countElement.parentElement.style.color = '#ffd700';
+            } else {
+                countElement.parentElement.style.color = '#7c3aed';
+            }
         });
 
         async function publicarRelato() {
@@ -421,6 +716,7 @@
 
                 document.getElementById("texto").value = "";
                 document.getElementById("charCount").textContent = "0";
+                document.getElementById("charCount").parentElement.style.color = '#7c3aed';
                 carregarRelatos();
                 setTimeout(() => {
                     botao.disabled = false;
@@ -472,7 +768,7 @@
 
                 if (relatos.length === 0) {
                     lista.innerHTML = `
-                        <div style="color: #7c3aed; text-align: center; padding: 40px; font-size: 1.1em;">
+                        <div style="color: #7c3aed; text-align: center; padding: 40px; font-size: 1.1em; text-shadow: 0 0 10px #7c3aed;">
                             🔇 NENHUMA CONFISSÃO AINDA...<br>
                             <small>Seja o primeiro a se confessar</small>
                         </div>
@@ -486,8 +782,8 @@
 
                     let html = `
                         <div class="relato">
-                            <div style="display: flex; justify-content: space-between; align-items: start;">
-                                <div>
+                            <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
+                                <div style="flex: 1;">
                                     <h3>[${String(index + 1).padStart(3, '0')}] ${relato.categoria}</h3>
                                     <p>${relato.texto}</p>
                                     <small>🕐 ${relato.data}</small>
