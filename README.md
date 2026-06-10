@@ -1,171 +1,294 @@
 # Confessionário Anônimo de Problemas
 
-## Visão Geral
+## 🎯 Visão Geral
 
-O **Confessionário Anônimo de Problemas** é um MVP de plataforma web onde qualquer pessoa pode compartilhar dificuldades, medos, dúvidas, fracassos, inseguranças, problemas familiares, problemas de relacionamento, dúvidas de fé e outros dilemas cotidianos de forma totalmente anônima e segura.
+O **Confessionário Anônimo de Problemas** é uma plataforma web moderna onde usuários podem compartilhar relatos anônimos sobre dificuldades pessoais e responder com solidariedade a outros. O sistema categoriza automaticamente os relatos e permite que a comunidade se sinta apoiada.
 
-O projeto não oferece terapia nem aconselhamento profissional. Seu objetivo é criar uma experiência acolhedora para mostrar que outras pessoas vivem situações parecidas e que ninguém precisa enfrentar seus desafios sozinho.
+> ⚠️ **Importante:** Este projeto não oferece terapia nem aconselhamento profissional. É uma ferramenta de apoio comunitário anônimo.
 
-Quando alguém envia um relato, o sistema:
+## ✨ Funcionalidades Principais
 
-- remove padrões simples de dados pessoais;
-- classifica o conteúdo por categoria;
-- busca relatos semelhantes;
-- retorna uma mensagem de apoio;
-- mostra estatísticas emocionais da comunidade;
-- atualiza o mural anônimo da interface.
+### 📝 Relatos Anônimos
+- Envio de relatos privados sem dados pessoais
+- Anonimização automática de emails, telefones e nomes
+- Limite de 1500 caracteres por relato
+- Validação de conteúdo (mínimo 8 caracteres)
 
-## Funcionalidades
+### 🏷️ Categorização Automática
+- **Ansiedade** - Medos, pânico, estresse, insegurança
+- **Família** - Conflitos familiares, briga, relacionamento
+- **Estudos** - Dificuldades escolares, notas, pressão
+- **Amizades** - Solidão, traição, rejeitamento
+- **Fé** - Questões espirituais, religião, culpa
+- **Relacionamento** - Amor, paixão, ciúmes, divórcio
+- **Saúde** - Doenças, tratamentos, diagnósticos
+- **Carreira** - Emprego, demissão, profissão
 
-- Envio de relatos anônimos por uma interface moderna.
-- Backend local em Python puro, sem frameworks pesados.
-- Programação Orientada a Objetos com as classes `Relato` e `Confessionario`.
-- Armazenamento em memória para facilitar execução e demonstração.
-- Anonimização básica de e-mails, telefones e apresentações com nome.
-- Classificação automática em categorias como Ansiedade, Família, Estudos, Amizades, Fé e Outros.
-- Busca simples de relatos semelhantes por categoria e termos em comum.
-- Estatísticas percentuais por categoria.
-- Mural com relatos fictícios e relatos enviados durante a sessão.
-- Design responsivo com tema escuro, glassmorphism, blur, bordas arredondadas e animações leves.
-- Aviso explícito de privacidade e de não substituição de ajuda profissional.
+### 💬 Sistema de Respostas
+- Responda com solidariedade a qualquer relato
+- Respostas anônimas (sem identificação)
+- Histórico de respostas persistido
+- Validação de respostas (5-1000 caracteres)
 
-## Tecnologias
+### 📊 Estatísticas Comunitárias
+- Percentuais por categoria em tempo real
+- Contagem de relatos por problema
+- Busca de relatos semelhantes
+- Dashboard com gráficos responsivos
 
-- **Backend:** Python 3
-- **Servidor local:** `http.server` e `ThreadingHTTPServer` da biblioteca padrão
-- **Frontend:** HTML, CSS e JavaScript puro
-- **Dados:** armazenamento em memória
-- **Estilo visual:** tema escuro, glassmorphism, gradientes, sombras suaves e responsividade
+### 💾 Persistência de Dados
+- Armazenamento em JSON local (`dados.json`)
+- Sincronização automática após cada ação
+- Recuperação de dados entre sessões
 
-## Estrutura do Projeto
+### 🎨 Interface Moderna
+- Design glassmorphism responsivo
+- Tema escuro com gradientes suaves
+- Animações fluidas e intuitivas
+- Totalmente acessível (aria-labels)
 
-```text
+## 🛠️ Tecnologias
+
+| Componente | Tecnologia |
+|-----------|-----------|
+| **Backend** | Python 3 (biblioteca padrão) |
+| **Servidor** | `http.server` + `ThreadingHTTPServer` |
+| **Frontend** | HTML5 + CSS3 + JavaScript puro |
+| **Persistência** | JSON |
+| **APIs** | REST puro (sem frameworks) |
+
+## 📁 Estrutura do Projeto
+
+```
 /
-├── PROJETO.py
-├── index.html
-└── README.md
+├── app.py              # Backend principal (Python)
+├── index.html          # Frontend (HTML + CSS + JS)
+├── dados.json          # Armazenamento persistido (gerado automaticamente)
+└── README.md           # Esta documentação
 ```
 
-## Como Executar
+## 🚀 Como Executar
 
-1. Verifique se você possui Python 3 instalado:
+### Pré-requisitos
+- Python 3.8+
+- Navegador web moderno
 
+### Instalação e Execução
+
+1. **Verifique a versão do Python:**
    ```bash
    python --version
    ```
 
-2. Execute o servidor local na raiz do projeto:
-
+2. **Execute o servidor:**
    ```bash
-   python PROJETO.py
+   python app.py
    ```
 
-3. Acesse a aplicação no navegador:
-
-   ```text
+3. **Acesse no navegador:**
+   ```
    http://localhost:8000
    ```
 
-4. Alternativa: também é possível abrir o `index.html` diretamente no navegador, mas a API só funcionará se o servidor Python estiver rodando em `http://localhost:8000`.
+### Saída Esperada
+```
+============================================================
+🔐 Confessionário Anônimo de Problemas
+============================================================
+✅ Servidor iniciado com sucesso!
+🌐 Acesse: http://localhost:8000
+📁 Dados salvos em: /caminho/para/dados.json
+============================================================
+Pressione Ctrl+C para parar o servidor.
+============================================================
+```
 
-## Exemplos de Uso
+## 📚 Exemplos de Uso
 
-### Exemplo 1
-
+### Exemplo 1: Enviar Relato
+```
 Relato enviado:
+"Tenho dificuldade de manter uma rotina de oração."
 
-```text
-Tenho dificuldade de manter uma rotina de oração.
+Resposta:
+✅ Categoria detectada: Fé
+✅ Relatos semelhantes: 3
+✅ Mensagem: "Você não está sozinho."
 ```
 
-Resposta esperada:
+### Exemplo 2: Responder com Solidariedade
+```
+Relato original:
+"Tenho medo do futuro e fico ansioso."
 
-```text
-Você não está sozinho.
-Categoria detectada: Fé
-Pessoas com relatos semelhantes: número calculado a partir da sessão atual
+Sua resposta:
+"Entendo sua ansiedade. Já passei por isso também. 
+Recomendo praticar meditação."
+
+✅ Resposta publicada anonimamente
 ```
 
-### Exemplo 2
-
-Relato enviado:
-
-```text
-Tenho medo do futuro e fico ansioso antes de dormir.
+### Exemplo 3: Visualizar Estatísticas
+```
+Problemas mais comuns:
+- Ansiedade: 35%
+- Família: 25%
+- Estudos: 15%
+- Amizades: 10%
+- Fé: 8%
+- Relacionamento: 5%
+- Saúde: 2%
 ```
 
-Resposta esperada:
+## 🏗️ Arquitetura
 
-```text
-Você não está sozinho.
-Categoria detectada: Ansiedade
-Pessoas com relatos semelhantes: número calculado a partir da sessão atual
+### Backend (`app.py`)
+
+#### Classe `Relato`
+```python
+@dataclass
+class Relato:
+    id: str              # UUID único
+    texto: str           # Conteúdo anonimizado
+    categoria: str       # Categoria detectada
+    data: str            # Timestamp ISO 8601
+    respostas: List      # Respostas associadas
 ```
 
-### Exemplo 3
-
-Relato enviado:
-
-```text
-Briguei com minha família e não sei como conversar de novo.
+#### Classe `Resposta`
+```python
+@dataclass
+class Resposta:
+    id: str              # UUID único
+    relato_id: str       # ID do relato respondido
+    texto: str           # Conteúdo da resposta
+    data: str            # Timestamp ISO 8601
 ```
 
-Resposta esperada:
+#### Classe `ConfessionarioApp`
+Métodos principais:
+- `adicionar_relato(texto)` - Cria novo relato
+- `adicionar_resposta(relato_id, texto)` - Adiciona resposta
+- `buscar_semelhantes(texto, categoria)` - Encontra relatos similares
+- `gerar_estatisticas()` - Calcula distribuição por categoria
+- `listar_relatos(categoria)` - Lista com filtro opcional
+- `obter_relato(relato_id)` - Retorna um relato específico
 
-```text
-Você não está sozinho.
-Categoria detectada: Família
-Pessoas com relatos semelhantes: número calculado a partir da sessão atual
+### Frontend (HTML/JS)
+
+#### Endpoints da API
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/api/relatos` | Lista todos os relatos |
+| `GET` | `/api/relatos?categoria=Fé` | Filtra por categoria |
+| `GET` | `/api/relatos/{id}` | Retorna relato específico |
+| `GET` | `/api/estatisticas` | Estatísticas gerais |
+| `GET` | `/api/categorias` | Lista categorias com contagem |
+| `POST` | `/api/relatos` | Cria novo relato |
+| `POST` | `/api/relatos/{id}/respostas` | Adiciona resposta |
+
+#### Fluxo da Aplicação
+
+```
+1. Usuário digita um relato
+   ↓
+2. Frontend envia POST /api/relatos
+   ↓
+3. Backend:
+   - Anonimiza dados pessoais
+   - Classifica por categoria
+   - Busca semelhantes
+   - Persiste em JSON
+   ↓
+4. Frontend atualiza:
+   - Estatísticas em tempo real
+   - Mural com novo relato
+   - Modal com confirmação
+   ↓
+5. Usuários podem clicar para ver respostas
+   ↓
+6. Qualquer um pode responder anonimamente
+   ↓
+7. Respostas são persistidas e sincronizadas
 ```
 
-## Arquitetura
+## 🔐 Segurança & Privacidade
 
-### Classe `Relato`
+### Anonimização
+- Remove automaticamente padrões de email: `user@example.com`
+- Remove padrões de telefone: `(11) 9999-9999`
+- Substitui nomes: "Meu nome é João" → "Meu nome é [nome removido]"
 
-A classe `Relato` representa uma confissão anônima dentro do sistema. Ela possui os atributos obrigatórios:
+### Proteções
+- `X-Content-Type-Options: nosniff` - Previne MIME sniffing
+- `X-Frame-Options: DENY` - Bloqueia frame embedding
+- CORS habilitado apenas para localhost
+- Validação de tamanho (5MB máximo por requisição)
 
-- `id`: identificador único gerado com UUID;
-- `texto`: conteúdo anonimizado do relato;
-- `categoria`: categoria detectada pelo classificador;
-- `data`: data de criação em formato ISO.
+### Limitações
+Este MVP remove apenas padrões simples. Para produção, seria necessário:
+- Criptografia de dados em repouso
+- HTTPS mandatório
+- Validação mais robusta (NLP/IA)
+- Moderação e denúncias
+- Conformidade com LGPD/GDPR
 
-### Classe `Confessionario`
+## 📊 Formato de Dados (dados.json)
 
-A classe `Confessionario` concentra as regras principais do MVP:
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "texto": "Tenho medo do futuro e sinto muita ansiedade.",
+    "categoria": "Ansiedade",
+    "data": "2026-06-10T21:52:30Z",
+    "respostas": [
+      {
+        "id": "650e8400-e29b-41d4-a716-446655440001",
+        "relato_id": "550e8400-e29b-41d4-a716-446655440000",
+        "texto": "Você não está sozinho. Muitos sentem o mesmo.",
+        "data": "2026-06-10T21:53:15Z"
+      }
+    ]
+  }
+]
+```
 
-- `adicionar_relato()`: recebe um texto, remove dados pessoais simples, classifica o relato, salva em memória e retorna a análise;
-- `buscar_semelhantes()`: encontra relatos parecidos por categoria ou por palavras em comum;
-- `gerar_estatisticas()`: calcula totais e percentuais de relatos por categoria;
-- `listar_relatos()`: retorna os relatos em ordem recente para a interface ou futuras integrações.
+## 🎯 Melhorias Futuras
 
-### Fluxo da aplicação
+- [ ] Banco de dados persistente (PostgreSQL/MongoDB)
+- [ ] Autenticação opcional (modo anônimo por padrão)
+- [ ] IA para agrupamento semântico avançado
+- [ ] Dashboard administrativo com moderação
+- [ ] API REST documentada com Swagger
+- [ ] Aplicativo mobile (React Native)
+- [ ] Sistema de denúncias e moderação comunitária
+- [ ] Criptografia E2E para dados sensíveis
+- [ ] Integração com linhas de ajuda profissional
+- [ ] Suporte multilíngue
+- [ ] Análise de sentimento com IA
 
-1. O usuário digita um problema na interface.
-2. O JavaScript exibe o estado `Analisando...`.
-3. O frontend envia o relato para `POST /api/relatos`.
-4. O backend anonimiza padrões sensíveis simples.
-5. O backend classifica o relato com palavras-chave auditáveis.
-6. O backend busca relatos semelhantes já armazenados em memória.
-7. O backend retorna categoria, quantidade de semelhantes, mensagem de apoio e estatísticas.
-8. A interface atualiza o cartão de resultado, os gráficos e o mural anônimo.
+## ⚠️ Avisos Legais
 
-## Melhorias Futuras
+1. **Não substitui ajuda profissional** - Este é um espaço de apoio comunitário
+2. **Moderação limitada** - Contato com números de emergência disponível
+3. **Dados em memória** - Reiniciar o servidor limpa dados não salvos
+4. **Uso responsável** - Respeite outros usuários
 
-- Banco de dados persistente.
-- Login opcional com modo totalmente anônimo por padrão.
-- IA para agrupamento semântico de relatos semelhantes.
-- Dashboard administrativo com moderação e métricas agregadas.
-- API REST documentada com autenticação para integrações.
-- Aplicativo mobile.
-- Sistema de denúncias e moderação comunitária.
-- Criptografia adicional para dados sensíveis.
-- Detecção mais robusta de informações pessoais.
-- Integração com recursos de ajuda profissional e contatos de emergência.
+## 📝 Licença
 
-## Observação de Privacidade
+Este projeto é fornecido como exemplo educacional. Sinta-se livre para modificar e distribuir.
 
-Este MVP remove apenas padrões simples de dados pessoais, como e-mails e telefones. Em produção, seria necessário usar técnicas mais robustas de privacidade, revisão de segurança, moderação de conteúdo e conformidade com regulamentações como LGPD e GDPR. Os dados são armazenados apenas em memória durante a sessão e não persistem após o servidor ser interrompido.
+## 💙 Contribuindo
 
-## Licença
+Sugestões e melhorias são bem-vindas! Alguns pontos para contribuir:
+- Melhorar algoritmos de categorização
+- Adicionar novas categorias
+- Aprimorar UI/UX
+- Implementar testes
+- Documentação
 
-Este projeto é fornecido como exemplo educacional e pode ser livremente modificado e distribuído.
+---
+
+**Desenvolvido com ❤️ para criar um espaço seguro de partilha e apoio mútuo.**
