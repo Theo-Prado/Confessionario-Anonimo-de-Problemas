@@ -2,9 +2,9 @@
 
 ## Visão Geral
 
-O **Confessionário Anônimo de Problemas** é um MVP de plataforma web onde qualquer pessoa pode compartilhar dificuldades, medos, dúvidas, fracassos, inseguranças, problemas familiares, problemas escolares ou desafios da vida de forma anônima.
+O **Confessionário Anônimo de Problemas** é um MVP de plataforma web onde qualquer pessoa pode compartilhar dificuldades, medos, dúvidas, fracassos, inseguranças, problemas familiares, problemas de relacionamento, dúvidas de fé e outros dilemas cotidianos de forma totalmente anônima e segura.
 
-O projeto não oferece terapia nem aconselhamento profissional. Seu objetivo é criar uma experiência acolhedora para mostrar que outras pessoas vivem situações parecidas e que ninguém precisa carregar seus pesos em completo isolamento.
+O projeto não oferece terapia nem aconselhamento profissional. Seu objetivo é criar uma experiência acolhedora para mostrar que outras pessoas vivem situações parecidas e que ninguém precisa enfrentar seus desafios sozinho.
 
 Quando alguém envia um relato, o sistema:
 
@@ -164,4 +164,8 @@ A classe `Confessionario` concentra as regras principais do MVP:
 
 ## Observação de Privacidade
 
-Este MVP remove apenas padrões simples de dados pessoais, como e-mails e telefones. Em produção, seria necessário usar técnicas mais robustas de privacidade, revisão de segurança, moderação e políticas claras de retenção de dados.
+Este MVP remove apenas padrões simples de dados pessoais, como e-mails e telefones. Em produção, seria necessário usar técnicas mais robustas de privacidade, revisão de segurança, moderação de conteúdo e conformidade com regulamentações como LGPD e GDPR. Os dados são armazenados apenas em memória durante a sessão e não persistem após o servidor ser interrompido.
+
+## Licença
+
+Este projeto é fornecido como exemplo educacional e pode ser livremente modificado e distribuído.
