@@ -336,11 +336,11 @@
   <main class="pagina">
     <section class="hero">
       <header class="glass">
-        <div class="selo">🔒 Anonimato em primeiro lugar</div>
+        <div class="selo">Anonimato em primeiro lugar</div>
         <h1>Confessionário Anônimo</h1>
         <p class="subtitulo">Compartilhe seu peso. Descubra que você não está sozinho.</p>
         <div class="privacidade">
-          <span>🛡️</span>
+          <span>Proteção</span>
           <p>Não armazenamos nomes, e-mails ou qualquer dado pessoal.</p>
         </div>
       </header>
@@ -378,10 +378,10 @@
       <article class="card glass">
         <h2>Mural Anônimo</h2>
         <div id="mural" class="mural">
-          <div class="post">“Tenho medo do futuro.”<small>Ansiedade</small></div>
-          <div class="post">“Não consigo perdoar alguém.”<small>Amizades</small></div>
-          <div class="post">“Estou cansado de fingir que estou bem.”<small>Ansiedade</small></div>
-          <div class="post">“Tenho dificuldade de rezar.”<small>Fé</small></div>
+          <div class="post">"Tenho medo do futuro."<small>Ansiedade</small></div>
+          <div class="post">"Não consigo perdoar alguém."<small>Amizades</small></div>
+          <div class="post">"Estou cansado de fingir que estou bem."<small>Ansiedade</small></div>
+          <div class="post">"Tenho dificuldade de rezar."<small>Fé</small></div>
         </div>
       </article>
     </section>
@@ -431,7 +431,7 @@
       const post = document.createElement('div');
       post.className = 'post';
       const textoCurto = relato.texto.length > 120 ? `${relato.texto.slice(0, 117)}...` : relato.texto;
-      post.innerHTML = `“${textoCurto}”<small>${relato.categoria}</small>`;
+      post.innerHTML = `"${textoCurto}"<small>${relato.categoria}</small>`;
       mural.prepend(post);
     }
 
