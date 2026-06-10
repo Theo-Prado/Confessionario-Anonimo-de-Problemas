@@ -20,7 +20,7 @@ from dataclasses import dataclass, asdict
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any
 from urllib.parse import urlparse
 
 HOST = "localhost"
@@ -100,7 +100,7 @@ class Confessionario:
         }
         self._carregar_relatos_iniciais()
 
-    def adicionar_relato(self, texto: str) -> Dict[str, object]:
+    def adicionar_relato(self, texto: str) -> Dict[str, Any]:
         """Remove dados pessoais simples, classifica e armazena um novo relato."""
         texto_limpo = self._anonimizar_texto(texto)
         categoria = self._classificar_relato(texto_limpo)
@@ -139,7 +139,7 @@ class Confessionario:
 
         return resultados
 
-    def gerar_estatisticas(self) -> Dict[str, object]:
+    def gerar_estatisticas(self) -> Dict[str, Any]:
         """Gera percentuais por categoria e números gerais da comunidade."""
         total = len(self.relatos)
         categorias = {categoria: 0 for categoria in (*self.palavras_chave.keys(), "Outros")}
@@ -158,7 +158,7 @@ class Confessionario:
             "percentuais": percentuais,
         }
 
-    def listar_relatos(self) -> List[Dict[str, str]]:
+    def listar_relatos(self) -> List[Dict[str, Any]]:
         """Retorna os relatos em formato seguro para a interface."""
         return [asdict(relato) for relato in reversed(self.relatos)]
 
@@ -270,7 +270,7 @@ class ServidorConfessionario(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(conteudo)
 
-    def _enviar_json(self, dados: Dict[str, object], status: int = 200) -> None:
+    def _enviar_json(self, dados: Dict[str, Any], status: int = 200) -> None:
         """Serializa respostas JSON e habilita CORS para testes locais."""
         conteudo = json.dumps(dados, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
@@ -281,7 +281,7 @@ class ServidorConfessionario(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(conteudo)
 
-    def log_message(self, formato: str, *args: object) -> None:
+    def log_message(self, formato: str, *args: Any) -> None:
         """Mantém logs do servidor claros e em português."""
         print(f"[Confessionário] {self.address_string()} - {formato % args}")
 
