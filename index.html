@@ -129,6 +129,59 @@
       font-weight: 700;
     }
 
+    .campo-categoria {
+      margin-bottom: 18px;
+    }
+
+    .ajuda-categoria {
+      margin-top: -4px;
+      margin-bottom: 12px;
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+    }
+
+    .grade-categorias {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .opcao-categoria {
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.45);
+      color: var(--texto);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      margin-top: 0;
+      box-shadow: none;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .opcao-categoria:hover,
+    .opcao-categoria.ativa {
+      border-color: rgba(96, 165, 250, 0.9);
+      background: rgba(96, 165, 250, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .opcao-categoria strong,
+    .filtro-categoria strong {
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    .opcao-categoria span,
+    .filtro-categoria span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      margin-top: 3px;
+    }
+
     textarea, input {
       width: 100%;
       border: 1px solid var(--borda);
@@ -267,6 +320,33 @@
       animation: crescer 0.9s ease both;
     }
 
+    .filtros-mural {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .filtro-categoria {
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--texto);
+      cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      width: auto;
+      margin-top: 0;
+      box-shadow: none;
+    }
+
+    .filtro-categoria:hover,
+    .filtro-categoria.ativo {
+      border-color: rgba(167, 139, 250, 0.9);
+      background: rgba(167, 139, 250, 0.14);
+      transform: none;
+    }
+
     .mural {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -386,7 +466,8 @@
         padding: 24px;
       }
 
-      .mural {
+      .mural,
+      .grade-categorias {
         grid-template-columns: 1fr;
       }
     }
@@ -423,6 +504,12 @@
 
       <section class="painel-confissao glass" aria-label="Enviar relato anônimo">
         <form id="formulario">
+          <div class="campo-categoria">
+            <label>Escolha uma categoria de confissão</label>
+            <p class="ajuda-categoria">Selecione se quiser direcionar o relato. Se preferir, deixe no automático.</p>
+            <div id="seletorCategorias" class="grade-categorias" role="radiogroup" aria-label="Categorias de confissão"></div>
+          </div>
+
           <label for="texto">Conte seu problema...</label>
           <textarea id="texto" name="texto" placeholder="Ex.: Tenho dificuldade de manter uma rotina de oração." required minlength="8"></textarea>
           <button id="botao" type="submit">Confessar</button>
@@ -433,7 +520,7 @@
           <p id="descricao">127 pessoas relataram algo semelhante.</p>
           <div class="metricas">
             <div class="metrica">
-              <span>Categoria detectada</span>
+              <span>Categoria escolhida/detectada</span>
               <strong id="categoria">Fé</strong>
             </div>
             <div class="metrica">
@@ -453,6 +540,7 @@
 
       <article class="card glass">
         <h2>Mural Anônimo</h2>
+        <div id="filtrosMural" class="filtros-mural" aria-label="Filtrar mural por categoria"></div>
         <div id="mural" class="mural"></div>
       </article>
     </section>
@@ -479,10 +567,15 @@
     const categoria = document.querySelector('#categoria');
     const semelhantes = document.querySelector('#semelhantes');
     const categorias = document.querySelector('#categorias');
+    const seletorCategorias = document.querySelector('#seletorCategorias');
+    const filtrosMural = document.querySelector('#filtrosMural');
     const mural = document.querySelector('#mural');
     const modal = document.querySelector('#modalRelato');
     const fecharModal = document.querySelector('#fecharModal');
     const conteudoModal = document.querySelector('#conteudoModal');
+    let categoriaSelecionada = '';
+    let filtroAtual = '';
+    let metadadosCategorias = [];
 
     function renderizarCategorias(percentuais) {
       categorias.innerHTML = Object.entries(percentuais)
@@ -498,6 +591,55 @@
           </div>
         `)
         .join('');
+    }
+
+    function renderizarSeletorCategorias(lista) {
+      const opcoes = [
+        { nome: '', icone: '✨', descricao: 'Detectar automaticamente pelo texto.' },
+        ...lista.filter(item => item.nome !== 'Outros'),
+      ];
+
+      seletorCategorias.innerHTML = opcoes.map(item => `
+        <button
+          class="opcao-categoria ${item.nome === categoriaSelecionada ? 'ativa' : ''}"
+          type="button"
+          role="radio"
+          aria-checked="${item.nome === categoriaSelecionada}"
+          data-categoria="${sanitizarTexto(item.nome)}"
+          title="${sanitizarTexto(item.descricao)}"
+        >
+          <strong>${item.icone} ${item.nome || 'Automático'}</strong>
+          <span>${sanitizarTexto(item.descricao)}</span>
+        </button>
+      `).join('');
+
+      seletorCategorias.querySelectorAll('.opcao-categoria').forEach(botaoCategoria => {
+        botaoCategoria.addEventListener('click', () => {
+          categoriaSelecionada = botaoCategoria.dataset.categoria;
+          renderizarSeletorCategorias(metadadosCategorias);
+        });
+      });
+    }
+
+    function renderizarFiltrosMural(lista) {
+      const filtros = [{ nome: '', icone: '🌐', total: null }, ...lista];
+      filtrosMural.innerHTML = filtros.map(item => {
+        const rotulo = item.nome || 'Todas';
+        const total = item.total === null ? '' : ` · ${item.total}`;
+        return `
+          <button class="filtro-categoria ${item.nome === filtroAtual ? 'ativo' : ''}" type="button" data-categoria="${sanitizarTexto(item.nome)}">
+            <strong>${item.icone} ${rotulo}${total}</strong>
+          </button>
+        `;
+      }).join('');
+
+      filtrosMural.querySelectorAll('.filtro-categoria').forEach(botaoFiltro => {
+        botaoFiltro.addEventListener('click', async () => {
+          filtroAtual = botaoFiltro.dataset.categoria;
+          renderizarFiltrosMural(metadadosCategorias);
+          await carregarRelatos();
+        });
+      });
     }
 
     function sanitizarTexto(texto) {
@@ -597,6 +739,19 @@
       }
     }
 
+    async function carregarCategorias() {
+      try {
+        const resposta = await fetch(`${API_BASE}/api/categorias`);
+        if (!resposta.ok) throw new Error('Erro ao carregar categorias');
+        const dados = await resposta.json();
+        metadadosCategorias = dados.categorias;
+        renderizarSeletorCategorias(metadadosCategorias);
+        renderizarFiltrosMural(metadadosCategorias);
+      } catch (erro) {
+        console.error('Erro ao carregar categorias:', erro);
+      }
+    }
+
     async function carregarEstatisticas() {
       try {
         const resposta = await fetch(`${API_BASE}/api/estatisticas`);
@@ -610,12 +765,15 @@
 
     async function carregarRelatos() {
       try {
-        const resposta = await fetch(`${API_BASE}/api/relatos`);
+        const url = filtroAtual
+          ? `${API_BASE}/api/relatos?categoria=${encodeURIComponent(filtroAtual)}`
+          : `${API_BASE}/api/relatos`;
+        const resposta = await fetch(url);
         if (!resposta.ok) throw new Error('Erro ao carregar');
         const dados = await resposta.json();
         
         mural.innerHTML = '';
-        dados.relatos.forEach(relato => adicionarAoMural(relato));
+        dados.relatos.slice().reverse().forEach(relato => adicionarAoMural(relato));
       } catch (erro) {
         console.error('Erro ao carregar relatos:', erro);
       }
@@ -634,7 +792,7 @@
         const resposta = await fetch(`${API_BASE}/api/relatos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ texto: conteudo }),
+          body: JSON.stringify({ texto: conteudo, categoria: categoriaSelecionada }),
         });
 
         const dados = await resposta.json();
@@ -645,7 +803,10 @@
         categoria.textContent = dados.categoria;
         semelhantes.textContent = dados.semelhantes;
         renderizarCategorias(dados.estatisticas.percentuais);
-        adicionarAoMural(dados.relato);
+        await carregarCategorias();
+        if (!filtroAtual || filtroAtual === dados.relato.categoria) {
+          adicionarAoMural(dados.relato);
+        }
         resultado.classList.add('visivel');
         texto.value = '';
       } catch (erro) {
@@ -669,6 +830,7 @@
     });
 
     // Carregar dados iniciais
+    carregarCategorias();
     carregarEstatisticas();
     carregarRelatos();
   </script>
