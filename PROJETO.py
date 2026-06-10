@@ -220,6 +220,19 @@ confessionario = Confessionario()
 class ServidorConfessionario(BaseHTTPRequestHandler):
     """Servidor HTTP minimalista para API e entrega do frontend."""
 
+    def _adicionar_headers_cors(self) -> None:
+        """Adiciona headers CORS a todas as respostas."""
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("X-Content-Type-Options", "nosniff")
+
+    def do_OPTIONS(self) -> None:  # noqa: N802
+        """Responde a requisições OPTIONS para CORS."""
+        self.send_response(204)
+        self._adicionar_headers_cors()
+        self.end_headers()
+
     def do_GET(self) -> None:  # noqa: N802 - assinatura exigida por BaseHTTPRequestHandler
         rota = urlparse(self.path).path
 
@@ -266,7 +279,7 @@ class ServidorConfessionario(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(conteudo)))
-        self.send_header("X-Content-Type-Options", "nosniff")
+        self._adicionar_headers_cors()
         self.end_headers()
         self.wfile.write(conteudo)
 
@@ -276,8 +289,7 @@ class ServidorConfessionario(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(conteudo)))
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("X-Content-Type-Options", "nosniff")
+        self._adicionar_headers_cors()
         self.end_headers()
         self.wfile.write(conteudo)
 
