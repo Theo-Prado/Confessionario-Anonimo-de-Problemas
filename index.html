@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confessionário Anônimo de Problemas</title>
+  <style>
+    :root {
+      --fundo: #0f172a;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-forte: rgba(255, 255, 255, 0.14);
+      --texto: #ffffff;
+      --texto-suave: #cbd5e1;
+      --detalhe: #60a5fa;
+      --detalhe-2: #a78bfa;
+      --sucesso: #34d399;
+      --borda: rgba(255, 255, 255, 0.18);
+      --sombra: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.22), transparent 34rem),
+        radial-gradient(circle at 80% 10%, rgba(167, 139, 250, 0.2), transparent 30rem),
+        var(--fundo);
+      color: var(--texto);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .pagina {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: stretch;
+      margin-top: 24px;
+    }
+
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 28px;
+      box-shadow: var(--sombra);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+    }
+
+    header {
+      padding: 42px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -70px;
+      top: -80px;
+      background: rgba(96, 165, 250, 0.16);
+      border-radius: 999px;
+      filter: blur(4px);
+    }
+
+    .selo {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 8px 12px;
+      border: 1px solid var(--borda);
+      border-radius: 999px;
+      color: var(--texto-suave);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      max-width: 720px;
+      font-size: clamp(2.4rem, 6vw, 5.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.07em;
+      margin-bottom: 22px;
+    }
+
+    .subtitulo {
+      max-width: 680px;
+      color: var(--texto-suave);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+
+    .privacidade {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: #dbeafe;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(96, 165, 250, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.22);
+    }
+
+    .painel-confissao {
+      padding: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--texto-suave);
+      font-weight: 700;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      border: 1px solid var(--borda);
+      border-radius: 24px;
+      outline: none;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.58);
+      color: var(--texto);
+      font: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    textarea:focus {
+      border-color: rgba(96, 165, 250, 0.9);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+      transform: translateY(-1px);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 20px;
+      padding: 16px 18px;
+      color: #06101f;
+      background: linear-gradient(135deg, var(--detalhe), #93c5fd 46%, var(--detalhe-2));
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 18px 45px rgba(96, 165, 250, 0.22);
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    button:hover {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.7;
+      transform: none;
+    }
+
+    .resultado {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.24);
+      animation: aparecer 0.42s ease both;
+    }
+
+    .resultado.visivel {
+      display: block;
+    }
+
+    .resultado h2 {
+      font-size: 1.2rem;
+      color: var(--sucesso);
+      margin-bottom: 8px;
+    }
+
+    .metricas {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metrica {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .metrica strong {
+      display: block;
+      font-size: 1.45rem;
+      color: var(--detalhe);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    .card {
+      padding: 28px;
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      margin-bottom: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .lista-categorias {
+      display: grid;
+      gap: 14px;
+    }
+
+    .categoria {
+      display: grid;
+      gap: 8px;
+    }
+
+    .categoria-topo {
+      display: flex;
+      justify-content: space-between;
+      color: var(--texto-suave);
+      font-weight: 700;
+    }
+
+    .barra {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .barra span {
+      display: block;
+      height: 100%;
+      width: var(--valor);
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--detalhe), var(--detalhe-2));
+      animation: crescer 0.9s ease both;
+    }
+
+    .mural {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .post {
+      min-height: 112px;
+      padding: 18px;
+      border: 1px solid var(--borda);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.07);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .post:hover {
+      transform: translateY(-4px);
+      background: var(--card-forte);
+    }
+
+    .post small {
+      display: block;
+      margin-top: 14px;
+      color: var(--detalhe);
+      font-weight: 800;
+    }
+
+    .rodape {
+      margin-top: 28px;
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 0.95rem;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes crescer {
+      from { width: 0; }
+      to { width: var(--valor); }
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header,
+      .painel-confissao,
+      .card {
+        padding: 24px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .pagina {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .mural,
+      .metricas {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="pagina">
+    <section class="hero">
+      <header class="glass">
+        <div class="selo">🔒 Anonimato em primeiro lugar</div>
+        <h1>Confessionário Anônimo</h1>
+        <p class="subtitulo">Compartilhe seu peso. Descubra que você não está sozinho.</p>
+        <div class="privacidade">
+          <span>🛡️</span>
+          <p>Não armazenamos nomes, e-mails ou qualquer dado pessoal.</p>
+        </div>
+      </header>
+
+      <section class="painel-confissao glass" aria-label="Enviar relato anônimo">
+        <form id="formulario">
+          <label for="texto">Conte seu problema...</label>
+          <textarea id="texto" name="texto" placeholder="Ex.: Tenho dificuldade de manter uma rotina de oração." required minlength="8"></textarea>
+          <button id="botao" type="submit">Confessar</button>
+        </form>
+
+        <div id="resultado" class="resultado" role="status" aria-live="polite">
+          <h2 id="mensagem">Você não está sozinho.</h2>
+          <p id="descricao">127 pessoas relataram algo semelhante.</p>
+          <div class="metricas">
+            <div class="metrica">
+              <span>Categoria detectada</span>
+              <strong id="categoria">Fé</strong>
+            </div>
+            <div class="metrica">
+              <span>Relatos semelhantes</span>
+              <strong id="semelhantes">127</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="grid">
+      <article class="card glass">
+        <h2>Problemas mais comuns</h2>
+        <div id="categorias" class="lista-categorias"></div>
+      </article>
+
+      <article class="card glass">
+        <h2>Mural Anônimo</h2>
+        <div id="mural" class="mural">
+          <div class="post">“Tenho medo do futuro.”<small>Ansiedade</small></div>
+          <div class="post">“Não consigo perdoar alguém.”<small>Amizades</small></div>
+          <div class="post">“Estou cansado de fingir que estou bem.”<small>Ansiedade</small></div>
+          <div class="post">“Tenho dificuldade de rezar.”<small>Fé</small></div>
+        </div>
+      </article>
+    </section>
+
+    <p class="rodape">Este projeto não substitui terapia, atendimento médico ou aconselhamento profissional.</p>
+  </main>
+
+  <script>
+    const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:8000' : '';
+    const formulario = document.querySelector('#formulario');
+    const texto = document.querySelector('#texto');
+    const botao = document.querySelector('#botao');
+    const resultado = document.querySelector('#resultado');
+    const mensagem = document.querySelector('#mensagem');
+    const descricao = document.querySelector('#descricao');
+    const categoria = document.querySelector('#categoria');
+    const semelhantes = document.querySelector('#semelhantes');
+    const categorias = document.querySelector('#categorias');
+    const mural = document.querySelector('#mural');
+
+    const estatisticasPadrao = {
+      Ansiedade: 35,
+      Família: 25,
+      Estudos: 15,
+      Amizades: 10,
+      Fé: 8,
+      Outros: 7,
+    };
+
+    function renderizarCategorias(percentuais = estatisticasPadrao) {
+      categorias.innerHTML = Object.entries(percentuais)
+        .map(([nome, valor]) => `
+          <div class="categoria">
+            <div class="categoria-topo">
+              <span>${nome}</span>
+              <span>${valor}%</span>
+            </div>
+            <div class="barra" aria-label="${nome}: ${valor}%">
+              <span style="--valor: ${valor}%;"></span>
+            </div>
+          </div>
+        `)
+        .join('');
+    }
+
+    function adicionarAoMural(relato) {
+      const post = document.createElement('div');
+      post.className = 'post';
+      const textoCurto = relato.texto.length > 120 ? `${relato.texto.slice(0, 117)}...` : relato.texto;
+      post.innerHTML = `“${textoCurto}”<small>${relato.categoria}</small>`;
+      mural.prepend(post);
+    }
+
+    async function carregarEstatisticas() {
+      try {
+        const resposta = await fetch(`${API_BASE}/api/estatisticas`);
+        if (!resposta.ok) throw new Error('Servidor indisponível');
+        const dados = await resposta.json();
+        renderizarCategorias(dados.percentuais);
+      } catch (erro) {
+        renderizarCategorias();
+      }
+    }
+
+    formulario.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      const conteudo = texto.value.trim();
+      if (!conteudo) return;
+
+      botao.disabled = true;
+      botao.textContent = 'Analisando...';
+      resultado.classList.remove('visivel');
+
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 650));
+        const resposta = await fetch(`${API_BASE}/api/relatos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texto: conteudo }),
+        });
+
+        const dados = await resposta.json();
+        if (!resposta.ok) throw new Error(dados.erro || 'Não foi possível enviar o relato.');
+
+        mensagem.textContent = dados.mensagem;
+        descricao.textContent = `${dados.semelhantes} pessoas relataram algo semelhante.`;
+        categoria.textContent = dados.categoria;
+        semelhantes.textContent = dados.semelhantes;
+        renderizarCategorias(dados.estatisticas.percentuais);
+        adicionarAoMural(dados.relato);
+        resultado.classList.add('visivel');
+        texto.value = '';
+      } catch (erro) {
+        mensagem.textContent = 'Não conseguimos analisar agora.';
+        descricao.textContent = erro.message;
+        categoria.textContent = 'Indisponível';
+        semelhantes.textContent = '0';
+        resultado.classList.add('visivel');
+      } finally {
+        botao.disabled = false;
+        botao.textContent = 'Confessar';
+      }
+    });
+
+    carregarEstatisticas();
+  </script>
+</body>
+</html>
