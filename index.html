@@ -427,11 +427,19 @@
         .join('');
     }
 
+    function sanitizarTexto(texto) {
+      const div = document.createElement('div');
+      div.textContent = texto;
+      return div.innerHTML;
+    }
+
     function adicionarAoMural(relato) {
       const post = document.createElement('div');
       post.className = 'post';
       const textoCurto = relato.texto.length > 120 ? `${relato.texto.slice(0, 117)}...` : relato.texto;
-      post.innerHTML = `"${textoCurto}"<small>${relato.categoria}</small>`;
+      const textoSeguro = sanitizarTexto(textoCurto);
+      const categoriaSegura = sanitizarTexto(relato.categoria);
+      post.innerHTML = `"${textoSeguro}"<small>${categoriaSegura}</small>`;
       mural.prepend(post);
     }
 
@@ -453,7 +461,6 @@
 
       botao.disabled = true;
       botao.textContent = 'Analisando...';
-      resultado.classList.remove('visivel');
 
       try {
         await new Promise((resolve) => setTimeout(resolve, 650));
