@@ -21,7 +21,7 @@ from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Dict, List, Any
-from urllib.parse import urlparse
+from urllib.parse import unquote_plus, urlparse
 
 HOST = "localhost"
 PORT = 8000
@@ -55,6 +55,56 @@ class ConfessionarioApp:
 
     def __init__(self) -> None:
         self.relatos: List[Relato] = []
+        self.categorias_info: Dict[str, Dict[str, str]] = {
+            "Ansiedade": {
+                "icone": "😰",
+                "descricao": "Medos, crises, estresse, futuro e inseguranças.",
+            },
+            "Família": {
+                "icone": "🏠",
+                "descricao": "Conflitos em casa, pais, irmãos, parentes e convivência.",
+            },
+            "Estudos": {
+                "icone": "📚",
+                "descricao": "Escola, faculdade, provas, notas e pressão acadêmica.",
+            },
+            "Amizades": {
+                "icone": "🤝",
+                "descricao": "Solidão, rejeição, traições, grupos e confiança.",
+            },
+            "Fé": {
+                "icone": "🙏",
+                "descricao": "Oração, religião, culpa, perdão e dúvidas espirituais.",
+            },
+            "Relacionamento": {
+                "icone": "💔",
+                "descricao": "Amor, namoro, casamento, término, ciúmes e paixão.",
+            },
+            "Saúde": {
+                "icone": "🩺",
+                "descricao": "Doenças, sintomas, tratamento, diagnóstico e bem-estar.",
+            },
+            "Carreira": {
+                "icone": "💼",
+                "descricao": "Emprego, demissão, chefe, salário e futuro profissional.",
+            },
+            "Finanças": {
+                "icone": "💸",
+                "descricao": "Dívidas, dinheiro, contas, orçamento e medo financeiro.",
+            },
+            "Autoestima": {
+                "icone": "🪞",
+                "descricao": "Vergonha, comparação, aparência, autocrítica e valor pessoal.",
+            },
+            "Luto": {
+                "icone": "🕯️",
+                "descricao": "Perdas, saudade, despedidas e processos de luto.",
+            },
+            "Vícios": {
+                "icone": "🧩",
+                "descricao": "Compulsões, dependências, recaídas e hábitos difíceis.",
+            },
+        }
         self.palavras_chave: Dict[str, tuple] = {
             "Ansiedade": (
                 "ansiedade", "medo", "pânico", "crise", "preocupação",
@@ -88,13 +138,29 @@ class ConfessionarioApp:
                 "emprego", "trabalho", "demissão", "promoção", "salário",
                 "chefe", "colega", "profissão", "desemprego", "entrevista"
             ),
+            "Finanças": (
+                "dinheiro", "dívida", "divida", "conta", "boleto", "aluguel",
+                "cartão", "emprestimo", "empréstimo", "orçamento", "financeiro"
+            ),
+            "Autoestima": (
+                "autoestima", "aparência", "aparencia", "vergonha", "comparação",
+                "comparacao", "corpo", "feio", "feia", "inadequado", "valor"
+            ),
+            "Luto": (
+                "luto", "perda", "morreu", "falecimento", "saudade",
+                "despedida", "morte", "enterro", "ausência", "ausencia"
+            ),
+            "Vícios": (
+                "vício", "vicio", "compulsão", "compulsao", "dependência",
+                "dependencia", "recaída", "recaida", "bebida", "aposta", "drogas"
+            ),
         }
         self._carregar_dados()
 
-    def adicionar_relato(self, texto: str) -> Dict[str, Any]:
+    def adicionar_relato(self, texto: str, categoria_manual: str | None = None) -> Dict[str, Any]:
         """Remove dados pessoais, classifica, armazena e persiste um novo relato."""
         texto_limpo = self._anonimizar_texto(texto)
-        categoria = self._classificar_relato(texto_limpo)
+        categoria = self._resolver_categoria(texto_limpo, categoria_manual)
         
         relato = Relato(
             id=str(uuid.uuid4()),
@@ -177,7 +243,7 @@ class ConfessionarioApp:
     def listar_relatos(self, categoria: str | None = None) -> List[Dict[str, Any]]:
         """Retorna relatos em formato seguro, opcionalmente filtrados por categoria."""
         relatos = self.relatos
-        if categoria and categoria in self.palavras_chave:
+        if categoria and (categoria in self.categorias_info or categoria == "Outros"):
             relatos = [r for r in relatos if r.categoria == categoria]
         
         return [asdict(r) for r in reversed(relatos)]
@@ -187,10 +253,24 @@ class ConfessionarioApp:
         relato = next((r for r in self.relatos if r.id == relato_id), None)
         return asdict(relato) if relato else None
 
-    def obter_categorias(self) -> Dict[str, str]:
-        """Retorna lista de categorias disponíveis."""
-        return {cat: f"{len([r for r in self.relatos if r.categoria == cat])} relatos" 
-                for cat in self.palavras_chave.keys()}
+    def obter_categorias(self) -> List[Dict[str, Any]]:
+        """Retorna categorias disponíveis com metadados e contagem."""
+        categorias: List[Dict[str, Any]] = []
+        for nome, info in self.categorias_info.items():
+            categorias.append({
+                "nome": nome,
+                "icone": info["icone"],
+                "descricao": info["descricao"],
+                "total": len([r for r in self.relatos if r.categoria == nome]),
+            })
+
+        categorias.append({
+            "nome": "Outros",
+            "icone": "✨",
+            "descricao": "Assuntos que não se encaixam nas categorias principais.",
+            "total": len([r for r in self.relatos if r.categoria == "Outros"]),
+        })
+        return categorias
 
     def _carregar_dados(self) -> None:
         """Carrega dados persistidos ou cria dados de exemplo."""
@@ -228,6 +308,10 @@ class ConfessionarioApp:
             ("Minha rotina de oração está muito fraca.", "Fé"),
             ("A escola me deixa inseguro e pressionado.", "Estudos"),
             ("Tenho vergonha de falar sobre meus problemas.", "Ansiedade"),
+            ("As dívidas e boletos me deixam sem dormir.", "Finanças"),
+            ("Me comparo com todo mundo e minha autoestima está muito baixa.", "Autoestima"),
+            ("Sinto muita saudade depois da perda de uma pessoa querida.", "Luto"),
+            ("Tenho medo de ter uma recaída nesse vício.", "Vícios"),
         ]
 
         for texto, _ in exemplos:
@@ -239,6 +323,12 @@ class ConfessionarioApp:
             ))
         
         self._salvar_dados()
+
+    def _resolver_categoria(self, texto: str, categoria_manual: str | None = None) -> str:
+        """Usa a categoria escolhida pela pessoa ou classifica automaticamente."""
+        if categoria_manual and categoria_manual in self.categorias_info:
+            return categoria_manual
+        return self._classificar_relato(texto)
 
     def _classificar_relato(self, texto: str) -> str:
         """Classifica relato baseado em palavras-chave simples e auditáveis."""
@@ -349,7 +439,8 @@ class ServidorHandler(BaseHTTPRequestHandler):
             self._enviar_json({"erro": "Relato muito longo (máximo 1500 caracteres)."}, 400)
             return
 
-        resposta = app.adicionar_relato(texto)
+        categoria = str(dados.get("categoria", "")).strip() or None
+        resposta = app.adicionar_relato(texto, categoria)
         self._enviar_json(resposta, 201)
 
     def _criar_resposta(self, relato_id: str, dados: Dict[str, Any]) -> None:
@@ -424,7 +515,7 @@ class ServidorHandler(BaseHTTPRequestHandler):
             if "=" in parte:
                 chave, valor = parte.split("=", 1)
                 if chave == nome:
-                    return valor
+                    return unquote_plus(valor)
         return None
 
     def log_message(self, formato: str, *args: Any) -> None:
