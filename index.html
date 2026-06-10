@@ -557,7 +557,13 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:8000';
+    const API_BASE = window.location.protocol === 'file:'
+      ? 'http://localhost:8000'
+      : window.location.origin;
+
+    function apiUrl(caminho) {
+      return `${API_BASE}${caminho}`;
+    }
     const formulario = document.querySelector('#formulario');
     const texto = document.querySelector('#texto');
     const botao = document.querySelector('#botao');
@@ -671,7 +677,7 @@
 
     async function exibirRelato(relatoId) {
       try {
-        const resposta = await fetch(`${API_BASE}/api/relatos/${relatoId}`);
+        const resposta = await fetch(apiUrl(`/api/relatos/${relatoId}`));
         if (!resposta.ok) throw new Error('Relato não encontrado');
         
         const relato = await resposta.json();
@@ -724,7 +730,7 @@
       if (!conteudo) return;
       
       try {
-        const resposta = await fetch(`${API_BASE}/api/relatos/${relatoId}/respostas`, {
+        const resposta = await fetch(apiUrl(`/api/relatos/${relatoId}/respostas`), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ texto: conteudo }),
@@ -741,7 +747,7 @@
 
     async function carregarCategorias() {
       try {
-        const resposta = await fetch(`${API_BASE}/api/categorias`);
+        const resposta = await fetch(apiUrl('/api/categorias'));
         if (!resposta.ok) throw new Error('Erro ao carregar categorias');
         const dados = await resposta.json();
         metadadosCategorias = dados.categorias;
@@ -754,7 +760,7 @@
 
     async function carregarEstatisticas() {
       try {
-        const resposta = await fetch(`${API_BASE}/api/estatisticas`);
+        const resposta = await fetch(apiUrl('/api/estatisticas'));
         if (!resposta.ok) throw new Error('Servidor indisponível');
         const dados = await resposta.json();
         renderizarCategorias(dados.percentuais);
@@ -766,8 +772,8 @@
     async function carregarRelatos() {
       try {
         const url = filtroAtual
-          ? `${API_BASE}/api/relatos?categoria=${encodeURIComponent(filtroAtual)}`
-          : `${API_BASE}/api/relatos`;
+          ? apiUrl(`/api/relatos?categoria=${encodeURIComponent(filtroAtual)}`)
+          : apiUrl('/api/relatos');
         const resposta = await fetch(url);
         if (!resposta.ok) throw new Error('Erro ao carregar');
         const dados = await resposta.json();
@@ -789,7 +795,7 @@
 
       try {
         await new Promise((resolve) => setTimeout(resolve, 650));
-        const resposta = await fetch(`${API_BASE}/api/relatos`, {
+        const resposta = await fetch(apiUrl('/api/relatos'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ texto: conteudo, categoria: categoriaSelecionada }),
