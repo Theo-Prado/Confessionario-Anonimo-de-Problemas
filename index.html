@@ -14,6 +14,7 @@
       --detalhe: #60a5fa;
       --detalhe-2: #a78bfa;
       --sucesso: #34d399;
+      --aviso: #fbbf24;
       --borda: rgba(255, 255, 255, 0.18);
       --sombra: 0 24px 80px rgba(0, 0, 0, 0.35);
     }
@@ -114,6 +115,7 @@
       border-radius: 20px;
       background: rgba(96, 165, 250, 0.1);
       border: 1px solid rgba(96, 165, 250, 0.22);
+      font-size: 0.95rem;
     }
 
     .painel-confissao {
@@ -127,10 +129,8 @@
       font-weight: 700;
     }
 
-    textarea {
+    textarea, input {
       width: 100%;
-      min-height: 210px;
-      resize: vertical;
       border: 1px solid var(--borda);
       border-radius: 24px;
       outline: none;
@@ -141,7 +141,12 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
     }
 
-    textarea:focus {
+    textarea {
+      min-height: 210px;
+      resize: vertical;
+    }
+
+    textarea:focus, input:focus {
       border-color: rgba(96, 165, 250, 0.9);
       box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
       transform: translateY(-1px);
@@ -266,6 +271,8 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 14px;
+      max-height: 600px;
+      overflow-y: auto;
     }
 
     .post {
@@ -275,6 +282,7 @@
       border-radius: 22px;
       background: rgba(255, 255, 255, 0.07);
       transition: transform 0.2s ease, background 0.2s ease;
+      cursor: pointer;
     }
 
     .post:hover {
@@ -282,11 +290,74 @@
       background: var(--card-forte);
     }
 
+    .post-texto {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
     .post small {
       display: block;
-      margin-top: 14px;
       color: var(--detalhe);
       font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.ativo {
+      display: flex;
+    }
+
+    .modal-conteudo {
+      background: var(--card);
+      border: 1px solid var(--borda);
+      border-radius: 28px;
+      padding: 32px;
+      width: min(600px, 90%);
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--sombra);
+    }
+
+    .modal-fechar {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--texto-suave);
+      transition: color 0.2s;
+    }
+
+    .modal-fechar:hover {
+      color: var(--texto);
+    }
+
+    .resposta-item {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 18px;
+      border-left: 3px solid var(--detalhe);
+      font-size: 0.95rem;
+      animation: aparecer 0.4s ease;
+    }
+
+    .resposta-data {
+      font-size: 0.8rem;
+      color: var(--texto-suave);
+      margin-top: 8px;
     }
 
     .rodape {
@@ -307,15 +378,16 @@
     }
 
     @media (max-width: 900px) {
-      .hero,
-      .grid {
+      .hero, .grid {
         grid-template-columns: 1fr;
       }
 
-      header,
-      .painel-confissao,
-      .card {
+      header, .painel-confissao, .card {
         padding: 24px;
+      }
+
+      .mural {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -325,9 +397,13 @@
         padding-top: 14px;
       }
 
-      .mural,
       .metricas {
         grid-template-columns: 1fr;
+      }
+
+      .modal-conteudo {
+        width: 95%;
+        padding: 20px;
       }
     }
   </style>
@@ -336,11 +412,11 @@
   <main class="pagina">
     <section class="hero">
       <header class="glass">
-        <div class="selo">Anonimato em primeiro lugar</div>
+        <div class="selo">🔐 Anonimato em primeiro lugar</div>
         <h1>Confessionário Anônimo</h1>
         <p class="subtitulo">Compartilhe seu peso. Descubra que você não está sozinho.</p>
         <div class="privacidade">
-          <span>Proteção</span>
+          <span>🛡️ Proteção</span>
           <p>Não armazenamos nomes, e-mails ou qualquer dado pessoal.</p>
         </div>
       </header>
@@ -377,17 +453,20 @@
 
       <article class="card glass">
         <h2>Mural Anônimo</h2>
-        <div id="mural" class="mural">
-          <div class="post">"Tenho medo do futuro."<small>Ansiedade</small></div>
-          <div class="post">"Não consigo perdoar alguém."<small>Amizades</small></div>
-          <div class="post">"Estou cansado de fingir que estou bem."<small>Ansiedade</small></div>
-          <div class="post">"Tenho dificuldade de rezar."<small>Fé</small></div>
-        </div>
+        <div id="mural" class="mural"></div>
       </article>
     </section>
 
-    <p class="rodape">Este projeto não substitui terapia, atendimento médico ou aconselhamento profissional.</p>
+    <p class="rodape">Este projeto não substitui terapia, atendimento médico ou aconselhamento profissional. 💙</p>
   </main>
+
+  <!-- Modal para visualizar relato completo -->
+  <div id="modalRelato" class="modal">
+    <div class="modal-conteudo">
+      <span class="modal-fechar" id="fecharModal">&times;</span>
+      <div id="conteudoModal"></div>
+    </div>
+  </div>
 
   <script>
     const API_BASE = 'http://localhost:8000';
@@ -401,17 +480,11 @@
     const semelhantes = document.querySelector('#semelhantes');
     const categorias = document.querySelector('#categorias');
     const mural = document.querySelector('#mural');
+    const modal = document.querySelector('#modalRelato');
+    const fecharModal = document.querySelector('#fecharModal');
+    const conteudoModal = document.querySelector('#conteudoModal');
 
-    const estatisticasPadrao = {
-      Ansiedade: 35,
-      Família: 25,
-      Estudos: 15,
-      Amizades: 10,
-      Fé: 8,
-      Outros: 7,
-    };
-
-    function renderizarCategorias(percentuais = estatisticasPadrao) {
+    function renderizarCategorias(percentuais) {
       categorias.innerHTML = Object.entries(percentuais)
         .map(([nome, valor]) => `
           <div class="categoria">
@@ -433,14 +506,95 @@
       return div.innerHTML;
     }
 
+    function formatarData(dataIso) {
+      const data = new Date(dataIso);
+      return data.toLocaleString('pt-BR');
+    }
+
     function adicionarAoMural(relato) {
       const post = document.createElement('div');
       post.className = 'post';
       const textoCurto = relato.texto.length > 120 ? `${relato.texto.slice(0, 117)}...` : relato.texto;
       const textoSeguro = sanitizarTexto(textoCurto);
       const categoriaSegura = sanitizarTexto(relato.categoria);
-      post.innerHTML = `"${textoSeguro}"<small>${categoriaSegura}</small>`;
+      
+      post.innerHTML = `
+        <div class="post-texto">"${textoSeguro}"</div>
+        <small>${categoriaSegura}</small>
+      `;
+      
+      post.addEventListener('click', () => exibirRelato(relato.id));
       mural.prepend(post);
+    }
+
+    async function exibirRelato(relatoId) {
+      try {
+        const resposta = await fetch(`${API_BASE}/api/relatos/${relatoId}`);
+        if (!resposta.ok) throw new Error('Relato não encontrado');
+        
+        const relato = await resposta.json();
+        
+        let htmlRespostas = '<h3 style="margin-top: 20px; color: var(--detalhe);">Respostas</h3>';
+        
+        if (relato.respostas && relato.respostas.length > 0) {
+          htmlRespostas += relato.respostas.map(r => `
+            <div class="resposta-item">
+              <p>${sanitizarTexto(r.texto)}</p>
+              <div class="resposta-data">${formatarData(r.data)}</div>
+            </div>
+          `).join('');
+        } else {
+          htmlRespostas += '<p style="color: var(--texto-suave); margin-top: 10px;">Sem respostas ainda. Seja o primeiro a responder!</p>';
+        }
+        
+        conteudoModal.innerHTML = `
+          <h2>${sanitizarTexto(relato.categoria)}</h2>
+          <p style="color: var(--texto-suave); font-size: 0.9rem; margin-bottom: 16px;">${formatarData(relato.data)}</p>
+          <p style="line-height: 1.6; margin-bottom: 20px;">"${sanitizarTexto(relato.texto)}"</p>
+          
+          <hr style="border: none; border-top: 1px solid var(--borda); margin: 20px 0;">
+          
+          <h3 style="margin-bottom: 14px;">Responda com solidariedade...</h3>
+          <form id="formResposta">
+            <textarea id="textoResposta" placeholder="Compartilhe uma palavra de apoio..." minlength="5" required style="min-height: 100px;"></textarea>
+            <button type="submit" style="margin-top: 12px;">Responder</button>
+          </form>
+          
+          ${htmlRespostas}
+        `;
+        
+        document.querySelector('#formResposta').addEventListener('submit', async (e) => {
+          await enviarResposta(e, relatoId);
+        });
+        
+        modal.classList.add('ativo');
+      } catch (erro) {
+        conteudoModal.innerHTML = `<p style="color: #ff6b6b;">Erro ao carregar relato: ${erro.message}</p>`;
+        modal.classList.add('ativo');
+      }
+    }
+
+    async function enviarResposta(evento, relatoId) {
+      evento.preventDefault();
+      const textoResposta = document.querySelector('#textoResposta');
+      const conteudo = textoResposta.value.trim();
+      
+      if (!conteudo) return;
+      
+      try {
+        const resposta = await fetch(`${API_BASE}/api/relatos/${relatoId}/respostas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ texto: conteudo }),
+        });
+        
+        if (!resposta.ok) throw new Error('Erro ao enviar resposta');
+        
+        textoResposta.value = '';
+        await exibirRelato(relatoId);
+      } catch (erro) {
+        alert('Erro: ' + erro.message);
+      }
     }
 
     async function carregarEstatisticas() {
@@ -450,7 +604,20 @@
         const dados = await resposta.json();
         renderizarCategorias(dados.percentuais);
       } catch (erro) {
-        renderizarCategorias();
+        console.error('Erro ao carregar estatísticas:', erro);
+      }
+    }
+
+    async function carregarRelatos() {
+      try {
+        const resposta = await fetch(`${API_BASE}/api/relatos`);
+        if (!resposta.ok) throw new Error('Erro ao carregar');
+        const dados = await resposta.json();
+        
+        mural.innerHTML = '';
+        dados.relatos.forEach(relato => adicionarAoMural(relato));
+      } catch (erro) {
+        console.error('Erro ao carregar relatos:', erro);
       }
     }
 
@@ -484,8 +651,6 @@
       } catch (erro) {
         mensagem.textContent = 'Não conseguimos analisar agora.';
         descricao.textContent = erro.message;
-        categoria.textContent = 'Indisponível';
-        semelhantes.textContent = '0';
         resultado.classList.add('visivel');
       } finally {
         botao.disabled = false;
@@ -493,7 +658,19 @@
       }
     });
 
+    fecharModal.addEventListener('click', () => {
+      modal.classList.remove('ativo');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('ativo');
+      }
+    });
+
+    // Carregar dados iniciais
     carregarEstatisticas();
+    carregarRelatos();
   </script>
 </body>
 </html>
